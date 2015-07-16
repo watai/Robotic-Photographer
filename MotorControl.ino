@@ -1,7 +1,7 @@
 #define SPEED_HIGH 96
 #define SPEED_HALF 64
 #define SPEED_QUART 32
-#define SPEED_LOW 20
+#define SPEED_LOW 18
 
 void SetStop(int d)
 {
