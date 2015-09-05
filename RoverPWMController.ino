@@ -1,64 +1,74 @@
 // RoverController via PWM
-// BATT -> TRex Motor Driver - Arduino Leonardo - RC Reciever
-// Pin Assign
-// I2C Pin 2(SDA)﻿﻿,3(SCL)﻿,3V3,GND
-// RPLidar 0(RX),1(TX),3V3(D11),GND
-// TRex/Debug Serial Pin 7(TX),8(RX)
-// RC Pulse Input Pin 5,6
-// Servo Pin 9,10
+// RC Reciever -> Arduino UNO -> TRex Motor Driver
 
 #include <Servo.h>
 #include <SoftwareSerial.h>
 #include <RPLidar.h>
-
-#define LEONARDO
-
-#define RC_CH1 5
-#define RC_CH2 6
-#define PWM_CH1 9
-#define PWM_CH2 10
-#define TXPIN 7
-#define RXPIN 8
-#define RPLIDAR_MTR 11
+#include "global.h"
 
 Servo MTR_R;
 Servo MTR_L;
-int pulse_ch1;
-int pulse_ch2;
 
 //SoftwareSerial trex(RXPIN, TXPIN);
+SoftwareSerial debug(RXPIN, TXPIN);
+//SoftwareSerial debug(XBEE_RX, XBEE_TX);
 
 RPLidar lidar;
+unsigned int distanceCM = 0;
+unsigned int count = 0;
+const int maxDeg = 360;
+const int subMax = 4;
+byte distBuff[maxDeg];
+const int threshold =500; // minimum distance
+
 unsigned int direct = 0;
-bool bSteered = false;
+//bool bSteered = false;
 
 void setup() {
-  pinMode(RC_CH1, INPUT);
-  pinMode(RC_CH2, INPUT);
-  pinMode(RXPIN, INPUT);
-  pinMode(TXPIN, OUTPUT);
+  setMode(PWM_MODE);
   pinMode(RPLIDAR_MTR, OUTPUT);
-  
-#ifdef LEONARDO
-  Serial.begin(9600);
-//  while (!Serial);
-  lidar.begin(Serial1);
-#else
   lidar.begin(Serial);
-#endif
-
-//  trex.begin(19200);
-//  delay(5);
-
-  MTR_R.attach(PWM_CH1,1000,2000);
-  MTR_L.attach(PWM_CH2,1000,2000);
-  MTR_R.writeMicroseconds(1500);
-  MTR_L.writeMicroseconds(1500);
+  
+  memset(distBuff,0,sizeof(distBuff));
+  
+//  Serial.print(9600);
+  debug.begin(9600); // sw serial monitor
 }
 
 void loop() {
-//  ReadLidar();
-  ThruPulse();
+//  PulseInOut();
+  ReadLidar();
 }
+
+void setMode(TrexMode mode){
+  switch(mode){
+    case SERIAL_MODE:
+      pinMode(RXPIN, INPUT);
+      pinMode(TXPIN, OUTPUT);
+//      trex.begin(19200);
+    break;
+    case PWM_MODE:
+      pinMode(RC_CH1, INPUT);
+      pinMode(RC_CH2, INPUT);
+      MTR_R.attach(PWM_CH1,1000,2000);
+      MTR_L.attach(PWM_CH2,1000,2000);
+      MTR_R.writeMicroseconds(1500);
+      MTR_L.writeMicroseconds(1500);
+    break;
+  }
+}
+
+void PulseInOut(){
+  unsigned int pulse1, pulse2;
+  pulse1 = pulseIn(RC_CH1, HIGH, 25000); // Read the pulse width of  
+  pulse2 = pulseIn(RC_CH2, HIGH, 25000); // each channel
+  
+  if(pulse1<1000||pulse1>2000){pulse1=1500;}
+  if(pulse2<1000||pulse2>2000){pulse2=1500;}
+  
+  MTR_R.writeMicroseconds(pulse1);
+  MTR_L.writeMicroseconds(pulse2);
+}
+
 
 
