@@ -12,6 +12,7 @@ The Rover Unmanned Ground Vehicle for Photography.
 - Remote Control with PS3 or RC2.4GHz Controller
 - Remote Shooting Photography
 - Arduino-Compatible
+- Unfortunately, this system hasn't been implemented autonomous shooting photo function. So, it's able to wireless remote control camera by hand.
 
 ## Hardware
 Features:
