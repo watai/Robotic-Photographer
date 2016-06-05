@@ -1,10 +1,9 @@
 # Robotic Photographer
 The Rover Unmanned Ground Vehicle for Photography.
 
-![robo](/image/robo640.jpg)
-<!-- <img src="/image/robo1.jpg" width="640px"> -->
+![robo](doc/image/robo640.jpg)
 
-## Purpose
+## Introduction
 
 ## Features
 - Autonomous Control
@@ -35,9 +34,8 @@ Features:
 - 2000 Times of Ranging per Second
 - Range More than 6 Meters
 
-
 ### Components List
-Please refer [here](docs/components.md).
+Please refer [here](doc/components.md).
 
 ## Firmware
 ### Dependencies
