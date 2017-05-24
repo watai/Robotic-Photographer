@@ -1,7 +1,7 @@
 # Robotic Photographer
 The Rover Unmanned Ground Vehicle for Photography.
 
-![robo](doc/image/robo.jpg)
+![](doc/resource/robo.jpg)
 
 ## Introduction
 
